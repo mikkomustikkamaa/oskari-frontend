@@ -34,11 +34,12 @@ Oskari.clazz.defineES('Oskari.mapframework.service.VectorFeatureService',
 
         /**
          * @method _registerEventHandlers
-         * Registers as handler for click and hover events.
+         * Registers as handler for events.
          */
         _registerEventHandlers () {
             this._sandbox.registerForEventByName(this, 'MouseHoverEvent');
             this._sandbox.registerForEventByName(this, 'MapClickedEvent');
+            this._sandbox.registerForEventByName(this, 'StatsGrid.TimeseriesObservationPointChangedEvent');
         }
 
         /**
@@ -411,6 +412,13 @@ Oskari.clazz.defineES('Oskari.mapframework.service.VectorFeatureService',
                 me.getSandbox().notifyAll(clickEvent);
             }
         }
+        _onTimeseriesObservationPointChanged (event) {
+            const contentOptions = [{ keyProperty: 'name', valueProperty: 'regionValue' }];
+            const { feature } = this._getTopmostFeatureAndLayer(event);
+            if (feature) {
+                this._updateTooltipContent(contentOptions, feature);
+            }
+        }
         /**
          * @public @method onEvent
          * Event is handled forwarded to correct #eventHandlers if found or
@@ -424,6 +432,8 @@ Oskari.clazz.defineES('Oskari.mapframework.service.VectorFeatureService',
                 this._onMapHover(event); break;
             case 'MapClickedEvent':
                 this._onMapClicked(event); break;
+            case 'StatsGrid.TimeseriesObservationPointChangedEvent':
+                this._onTimeseriesObservationPointChanged(event); break;
             }
         }
     }

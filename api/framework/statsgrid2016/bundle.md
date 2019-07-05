@@ -122,6 +122,22 @@ Indicator selector, regionset selector and a datagrid with the indicator data ar
     <td>StatsGrid.ClassificationChangedEvent</td>
     <td>Updates legend (and map with mapstats) when classification is changed.</td>
   </tr>
+  <tr>
+    <td>MouseHoverEvent</td>
+    <td>Tracks mouse cursor position which is used as parameters of TimeseriesObservationPointChangedEvent</td>
+  </tr>
+</table>
+
+## Events the bundle sends out
+
+<table class="table">
+  <tr>
+    <th>Event</th><th>Purpose</th>
+  </tr>
+  <tr>
+    <td>StatsGrid.TimeseriesObservationPointChangedEvent</td>
+    <td>To notify when observation point is changed in thematic map timeseries.</td>
+  </tr>
 </table>
 
 ## Dependencies

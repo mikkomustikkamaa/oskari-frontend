@@ -1,4 +1,5 @@
 Oskari.clazz.define('Oskari.statistics.statsgrid.SeriesControl', function (sandbox, locale) {
+    this.__name = 'SeriesControl';
     this.sb = sandbox;
     this.loc = locale;
     this.log = Oskari.log('Oskari.statistics.statsgrid.SeriesControl');
@@ -32,6 +33,7 @@ Oskari.clazz.define('Oskari.statistics.statsgrid.SeriesControl', function (sandb
         currentSeriesIndex: undefined
     };
     this._bindToEvents();
+    this._registerEventHandlers();
 }, {
     __speedOptions: [
         { key: 'fast', value: 1000 },
@@ -257,11 +259,18 @@ Oskari.clazz.define('Oskari.statistics.statsgrid.SeriesControl', function (sandb
         }
         this._renderHandle(index);
         this._updateValueDisplay(this._uiState.currentSeriesIndex);
+        this._updateToolTipContent();
     },
     _updateValueDisplay: function (index) {
         var display = this._element.find('.stats-series-value');
         var value = this._uiState.values[index];
         display.text(value);
+    },
+    _updateToolTipContent: function () {
+        if (this._pageX && this._pageY) {
+            const event = Oskari.eventBuilder('StatsGrid.TimeseriesObservationPointChangedEvent')(this._pageX, this._pageY);
+            this.sb.notifyAll(event);
+        }
     },
     /**
      * Listen to events that require re-rendering the UI
@@ -289,5 +298,40 @@ Oskari.clazz.define('Oskari.statistics.statsgrid.SeriesControl', function (sandb
                 }
             }
         });
+    },
+    /**
+     * @method _registerEventHandlers
+     * Registers as handler for events.
+     */
+    _registerEventHandlers () {
+        this.sb.registerForEventByName(this, 'MouseHoverEvent');
+    },
+    /**
+     * @public @method onEvent
+     * Event is handled forwarded to correct #eventHandlers if found or
+     * discarded* if not.
+     *
+     * @param {Oskari.mapframework.event.Event} event a Oskari event object
+     */
+    onEvent (event) {
+        switch (event.getName()) {
+        case 'MouseHoverEvent':
+            this._onMapHover(event);
+            break;
+        }
+    },
+    _onMapHover (event) {
+        this._saveLatestPositionOfMouseCursor(event);
+    },
+    _saveLatestPositionOfMouseCursor (event) {
+        this._pageX = event.getPageX();
+        this._pageY = event.getPageY();
+    },
+    /**
+     * @method getName
+     * @return {String} service name
+     */
+    getName () {
+        return this.__name;
     }
 });
