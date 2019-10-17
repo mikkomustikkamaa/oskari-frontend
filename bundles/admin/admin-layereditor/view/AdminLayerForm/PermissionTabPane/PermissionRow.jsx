@@ -11,11 +11,13 @@ const RowContainer = styled.div`
 const TextColumn = styled.div`
     flex-grow: 1;
     width: 195px;
+    padding-left: 5px;
 `;
 
 const HeaderTextColumn = styled.div`
     flex-grow: 1;
     width: 195px;
+    padding-left: 5px;
     align-self: flex-end;
 `;
 

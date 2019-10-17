@@ -7,11 +7,10 @@ import { withLocale } from 'oskari-ui/util';
 
 const StyledListItem = styled(ListItem)`
     &:first-child > div {
-        padding-top: 5px;
         font-weight: bold;
     }
-    &:last-child > div {
-        padding-bottom: 20px;
+    &:not(:first-child) {
+        background-color: ${props => props.even % 2 === 0 ? '#ffffff' : '#f3f3f3'};
     }
 `;
 
@@ -19,9 +18,13 @@ const SpinnerDiv = styled.div`
    padding: 20px;
 `;
 
-const renderRow = (rowModel) => {
+const ListDiv = styled.div`
+    padding-bottom: 20px !important;
+`;
+
+const renderRow = (rowModel, even) => {
     return (
-        <StyledListItem>
+        <StyledListItem even={even}>
             <PermissionRow {...rowModel}/>
         </StyledListItem>
     );
@@ -32,8 +35,12 @@ const PermissionsTabPane = (props) => {
     var permissionDataModel;
     if (rolesAndPermissionTypes) {
         // TODO: Refactor data model in next iteration
+        /*
+         * every
+         * 
+         */
         const permissionTypes = [...rolesAndPermissionTypes.permissionTypes];
-        const headerSelections = permissionTypes.map(permission => {
+        const headerSelections = permissionTypes.map((permission) => {
             const copy = JSON.parse(JSON.stringify(permission));
             copy.selectionText = getMessage('rights.' + permission.id);
             copy.header = true;
@@ -61,7 +68,7 @@ const PermissionsTabPane = (props) => {
 
     return (
         permissionDataModel
-            ? <List bordered={false} dataSource={permissionDataModel} renderItem={renderRow}/>
+            ? <ListDiv><List bordered={false} dataSource={permissionDataModel} renderItem={renderRow}/></ListDiv>
             : <SpinnerDiv><Spin/></SpinnerDiv>
     );
 };
